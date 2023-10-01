@@ -7,7 +7,7 @@ const lowercase = document.getElementById('lowercase');
 const numbers = document.getElementById('numbers');
 const symbols = document.getElementById('symbols');
 
-generatePassBtn.addEventListener('click', () => {
+const generateAndDisplayPassword = () => {
   const password = generatePassword(
     Number(passwordLength.value),
     uppercase.checked,
@@ -16,9 +16,9 @@ generatePassBtn.addEventListener('click', () => {
     symbols.checked
   );
   result.textContent = password;
-});
+};
 
-copyBtn.addEventListener('click', () => {
+const copyPasswordToClipboard = () => {
   if (result.textContent !== '') {
     navigator.clipboard
       .writeText(result.textContent)
@@ -26,10 +26,10 @@ copyBtn.addEventListener('click', () => {
         alert('password copied to clipboard');
       })
       .catch((err) => {
-        alert('unable to copy password');
+        alert('unable to copy password', err);
       });
   }
-});
+};
 
 function generatePassword(
   passwordLength,
@@ -38,7 +38,10 @@ function generatePassword(
   isNumber,
   isSymbol
 ) {
-  let password = '';
+  if (passwordLength <= 0) {
+    alert('Password length should be greater than 0');
+    return '';
+  }
   // Define character sets
   const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
@@ -48,18 +51,12 @@ function generatePassword(
   // include chars to passwordList if checked
   let allChars = '';
 
-  if (isUpperCase) {
-    allChars += uppercaseChars;
-  }
-  if (islowercase) {
-    allChars += lowercaseChars;
-  }
-  if (isNumber) {
-    allChars += numberChars;
-  }
-  if (isSymbol) {
-    allChars += symbolChars;
-  }
+  if (isUpperCase) allChars += uppercaseChars;
+  if (islowercase) allChars += lowercaseChars;
+  if (isNumber) allChars += numberChars;
+  if (isSymbol) allChars += symbolChars;
+
+  let password = '';
   for (let i = 0; i < passwordLength; i++) {
     const randomIndex = Math.floor(Math.random() * allChars.length);
     password += allChars.charAt(randomIndex);
@@ -67,3 +64,7 @@ function generatePassword(
 
   return password;
 }
+
+document.addEventListener('DOMContentLoaded', generateAndDisplayPassword);
+generatePassBtn.addEventListener('click', generateAndDisplayPassword);
+copyBtn.addEventListener('click', copyPasswordToClipboard);
