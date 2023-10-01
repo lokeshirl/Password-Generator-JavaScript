@@ -1,4 +1,5 @@
 const result = document.getElementById('result');
+const copyBtn = document.getElementById('clipboard');
 const passwordLength = document.getElementById('length');
 const generatePassBtn = document.getElementById('generate');
 const uppercase = document.getElementById('uppercase');
@@ -15,6 +16,19 @@ generatePassBtn.addEventListener('click', () => {
     symbols.checked
   );
   result.textContent = password;
+});
+
+copyBtn.addEventListener('click', () => {
+  if (result.textContent !== '') {
+    navigator.clipboard
+      .writeText(result.textContent)
+      .then(() => {
+        alert('password copied to clipboard');
+      })
+      .catch((err) => {
+        alert('unable to copy password');
+      });
+  }
 });
 
 function generatePassword(
